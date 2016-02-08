@@ -1,0 +1,32 @@
+{
+  "name": "auservices",
+  "version": "1.0.0",
+  "description": "Australian Services bot",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.13.3",
+    "multer": "^1.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "tsd install"
+  },
+  "keywords": [
+    "Australian Services",
+    "Telegram",
+    "Bot",
+    "API"
+  ],
+  "author": "Yury Galustov <yuryg@timetarget.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ygalustov/au-services.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ygalustov/au-services/issues"
+  },
+  "homepage": "https://github.com/ygalustov/au-services#readme"
+}
