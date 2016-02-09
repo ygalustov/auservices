@@ -6,9 +6,17 @@
  */
 
 import Consts = require("./Consts");
+import fs = require("fs");
 
 class Utils {
     public static isValidToken(token) {
+        if (!Consts.greetingsKey) {
+            let config = fs.readFileSync("botconfig.json", "utf8"),
+                json = JSON.parse(config);
+
+            Consts.greetingsKey = json.SecurityToken;
+        }
+
         return (token === Consts.greetingsKey);
     }
 

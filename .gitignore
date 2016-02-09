@@ -39,3 +39,4 @@ node_modules
 settings.json
 launch.json
 typings/*
+botconfig.json
