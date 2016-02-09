@@ -6,7 +6,7 @@
  */
 
 class Consts {
-    public static greetingsKey: string = "0fb7eb0f4e6af2d4f7e57763c80d39e67e571554";
+    public static greetingsKey: string = "<put security token here>";
     public static rootText: string = "AU personal assistant.";
     public static welcomeMessage = "start";
 }
