@@ -7,21 +7,20 @@ import InputMessage = require("../../types/InputMessage");
 import BasicAnswer = require("./BasicAnswer");
 import Answer = require("../../types/Answer");
 
-class UnknownAnswer extends BasicAnswer  {
+class UnknownAnswer extends BasicAnswer {
     constructor(inputMessage: InputMessage) {
-        super(inputMessage);
-        this.text = "Unfortunately I cannot understand you.\nType /Start to open menu.";
+        super();
+        this.inputMessage = inputMessage;
+    }
+
+    isLastInChain(): boolean {
+        return true;
     }
 
     getAnswer(): Answer {
-        let answer: Answer;
+        this.text = "Unfortunately I cannot understand you.\nType /Start to open menu.";
 
-        answer = super.getAnswer();
-        answer.reply_markup = {
-            hide_keyboard: true
-        };
-
-        return answer;
+        return super.getAnswer();
     }
 }
 

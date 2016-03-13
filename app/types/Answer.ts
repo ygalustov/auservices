@@ -3,6 +3,8 @@
  * See LICENSE in the project root for license information.
  */
 
+import ReplyMarkup = require("./ReplyMarkup");
+
 interface Answer {
     method: string;
     parse_mode?: string;
@@ -10,12 +12,7 @@ interface Answer {
     text?: string;
     latitude?: number;
     longitude?: number;
-    reply_markup?: {
-        keyboard?: string[][];
-        one_time_keyboard?: boolean;
-        hide_keyboard?: boolean;
-        resize_keyboard?: boolean;
-    };
+    reply_markup?: ReplyMarkup;
 }
 
 export = Answer;

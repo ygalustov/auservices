@@ -11,6 +11,7 @@ interface IAnswer {
     forwardRoutes: Array<ForwardRoute>;
     inputMessage: InputMessage;
     prevAnswer: IAnswer;
+    text: string;
 
     isInputCorrect(): boolean;
     isLastInChain(): boolean;

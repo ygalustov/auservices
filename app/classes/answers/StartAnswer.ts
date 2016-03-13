@@ -12,29 +12,26 @@ import CarCheck1Answer = require("./CarCheck1Answer");
 class StartAnswer extends BasicAnswer {
 
     constructor(inputMessage: InputMessage) {
-        super(inputMessage);
+        super();
+        this.inputMessage = inputMessage;
 
         // Set forward routes
         this.forwardRoutes.push({
-            answer: new CarCheck1Answer(undefined),
+            answer: new CarCheck1Answer(),
             text: "carcheck"
         });
     }
 
     getAnswer(): Answer {
-        let answer: Answer;
-
-        this.text = Utils.format("Hello {0},\nI'm your personal assistant. " +
-            "Please choose what you would like to get.\n",
+        this.text = Utils.format("Hello {0},\nI'm your personal assistant. Please choose what you would like to get.\n",
             this.inputMessage.message.from.first_name);
 
-        answer = super.getAnswer();
-        answer.reply_markup = {
+        this.replyMarkup = {
             keyboard: [["Car check 🚗"]],
             resize_keyboard: true
         };
 
-        return answer;
+        return super.getAnswer();
     }
 }
 

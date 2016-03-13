@@ -6,8 +6,9 @@
 import Answer = require("../../types/Answer");
 import BasicAnswer = require("./BasicAnswer");
 import Utils = require("../Utils");
+import RegoCheck = require("../../../scrapers/rego/RegoCheck");
 
-class CarCheck2Answer extends BasicAnswer  {
+class CarCheck2Answer extends BasicAnswer {
 
     isLastInChain(): boolean {
         return true;
@@ -18,23 +19,20 @@ class CarCheck2Answer extends BasicAnswer  {
     }
 
     getAnswer(): Answer {
-        let answer: Answer,
-            plates = this.inputMessage.message.text;
+        let plates = this.inputMessage.message.text;
 
         if (this.isInputCorrect()) {
-            this.text = Utils.format("Plates {0} entered.", plates);
+            let rego = new RegoCheck();
+            this.text = "result is " + rego.getResponse(plates);
         } else {
             this.text = Utils.format("Wrong plate format: {0}.", plates);
+
+            this.replyMarkup = {
+                hide_keyboard: true
+            };
         }
 
-        answer = super.getAnswer();
-        // Buttons
-        answer.reply_markup = {
-            keyboard: [[ "/Start" ]],
-            resize_keyboard: true
-        };
-
-        return answer;
+        return super.getAnswer();
     }
 }
 

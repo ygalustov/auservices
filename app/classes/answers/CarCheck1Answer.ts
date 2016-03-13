@@ -3,33 +3,29 @@
  * See LICENSE in the project root for license information.
  */
 
-import InputMessage = require("../../types/InputMessage");
 import BasicAnswer = require("./BasicAnswer");
 import CarCheck2Answer = require("./CarCheck2Answer");
 import Answer = require("../../types/Answer");
 
 class CarCheck1Answer extends BasicAnswer {
 
-    constructor(inputMessage: InputMessage) {
-        super(inputMessage);
-        this.text = "Enter your car plates or hit /Start to return to the Main menu.";
+    constructor() {
+        super();
 
         // Set forward routes
         this.forwardRoutes.push({
-            answer: new CarCheck2Answer(undefined),
+            answer: new CarCheck2Answer(),
             text: "*"
         });
     }
 
     getAnswer(): Answer {
-        let answer: Answer;
-
-        answer = super.getAnswer();
-        answer.reply_markup = {
+        this.text = "Enter your car plates or hit /Start to return to the Main menu.";
+        this.replyMarkup = {
             hide_keyboard: true
         };
 
-        return answer;
+        return super.getAnswer();
     }
 }
 

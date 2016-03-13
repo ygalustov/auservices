@@ -3,11 +3,11 @@
  * See LICENSE in the project root for license information.
  */
 
-import IAnswer = require("../interfaces/IAnswer");
-
-interface ForwardRoute {
-    answer: IAnswer;
-    text: string;
+interface ReplyMarkup {
+    hide_keyboard?: boolean;
+    keyboard?: Array<Array<string>>;
+    one_time_keyboard?: boolean;
+    resize_keyboard?: boolean;
 }
 
-export = ForwardRoute;
+export = ReplyMarkup;

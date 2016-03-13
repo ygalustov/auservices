@@ -6,34 +6,52 @@
 import IAnswer = require("../../interfaces/IAnswer");
 import InputMessage = require("../../types/InputMessage");
 import Answer = require("../../types/Answer");
+import ReplyMarkup = require("../../types/ReplyMarkup");
 import ForwardRoute = require("../../types/ForwardRoute");
 
 class BasicAnswer implements IAnswer {
     private _text: string;
+    // Usually inputMessage is set during the routing process, so no assignment in the constructor
     private _inputMessage: InputMessage;
     private _forwardRoutes: Array<ForwardRoute>;
     private _prevAnswer: IAnswer;
+    private _replyMarkup: ReplyMarkup;
 
-    constructor(inputMessage: InputMessage) {
-        this._inputMessage = inputMessage;
+    constructor() {
         this._forwardRoutes = [];
-    }
-
-    getAnswer(): Answer {
-        return {
-            chat_id: this.inputMessage.message.chat.id,
-            method: "sendMessage",
-            parse_mode: "Markdown",
-            text: this._text
-        };
     }
 
     isLastInChain(): boolean {
         return false;
     }
 
+    getAnswer(): Answer {
+        if (this.isLastInChain() && this.isInputCorrect()) {
+            this.replyMarkup = {
+                keyboard: [["/Start"]],
+                resize_keyboard: true
+            };
+        }
+
+        return {
+            chat_id: this.inputMessage.message.chat.id,
+            method: "sendMessage",
+            parse_mode: "Markdown",
+            reply_markup: this.replyMarkup,
+            text: this.text
+        };
+    }
+
     isInputCorrect(): boolean {
         return (this.inputMessage && this.inputMessage.message.text.length > 0);
+    }
+
+    get replyMarkup(): ReplyMarkup {
+        return this._replyMarkup;
+    }
+
+    set replyMarkup(replyMarkup: ReplyMarkup) {
+        this._replyMarkup = replyMarkup;
     }
 
     get text(): string {

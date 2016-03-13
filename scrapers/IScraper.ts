@@ -3,11 +3,8 @@
  * See LICENSE in the project root for license information.
  */
 
-import IAnswer = require("../interfaces/IAnswer");
-
-interface ForwardRoute {
-    answer: IAnswer;
-    text: string;
+interface IScraper {
+    getResponse(request: string): string;
 }
 
-export = ForwardRoute;
+export = IScraper;
