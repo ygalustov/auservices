@@ -8,3 +8,5 @@ This set gets public information from various australian websites and convert it
 
 ## Testing services
 To test run Telegram application and start conversation with *AustralianServicesBot*.
+
+If you don't have Telegram application go to https://telegram.org/ and download it for free.
