@@ -4,7 +4,7 @@
  */
 
 import InputMessage = require("../../types/InputMessage");
-import Answer = require("../../types/Answer");
+import AnswerCallback = require("../../types/AnswerCallback");
 import BasicAnswer = require("./BasicAnswer");
 import Utils = require("../Utils");
 import CarCheck1Answer = require("./CarCheck1Answer");
@@ -22,7 +22,7 @@ class StartAnswer extends BasicAnswer {
         });
     }
 
-    getAnswer(): Answer {
+    getAnswer(cb: AnswerCallback) {
         this.text = Utils.format("Hello {0},\nI'm your personal assistant. Please choose what you would like to get.\n",
             this.inputMessage.message.from.first_name);
 
@@ -31,7 +31,7 @@ class StartAnswer extends BasicAnswer {
             resize_keyboard: true
         };
 
-        return super.getAnswer();
+        super.getAnswer(cb);
     }
 }
 

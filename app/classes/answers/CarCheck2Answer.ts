@@ -3,36 +3,29 @@
  * See LICENSE in the project root for license information.
  */
 
-import Answer = require("../../types/Answer");
 import BasicAnswer = require("./BasicAnswer");
-import Utils = require("../Utils");
-import RegoCheck = require("../../../scrapers/rego/RegoCheck");
+import CarCheck3Answer = require("./CarCheck3Answer");
+import AnswerCallback = require("../../types/AnswerCallback");
 
 class CarCheck2Answer extends BasicAnswer {
 
-    isLastInChain(): boolean {
-        return true;
+    constructor() {
+        super();
+
+        // Set forward routes
+        this.forwardRoutes.push({
+            answer: new CarCheck3Answer(),
+            text: "*"
+        });
     }
 
-    isInputCorrect(): boolean {
-        return (this.inputMessage.message.text.length === 3);
-    }
+    public getAnswer(cb: AnswerCallback) {
+        this.text = "Enter your car plates or hit /Start to return to the Main menu.";
+        this.replyMarkup = {
+            hide_keyboard: true
+        };
 
-    getAnswer(): Answer {
-        let plates = this.inputMessage.message.text;
-
-        if (this.isInputCorrect()) {
-            let rego = new RegoCheck();
-            this.text = "result is " + rego.getResponse(plates);
-        } else {
-            this.text = Utils.format("Wrong plate format: {0}.", plates);
-
-            this.replyMarkup = {
-                hide_keyboard: true
-            };
-        }
-
-        return super.getAnswer();
+        super.getAnswer(cb);
     }
 }
 

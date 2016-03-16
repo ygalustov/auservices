@@ -10,10 +10,12 @@ import Consts = require("./app/classes/Consts");
 import Utils = require("./app/classes/Utils");
 
 import InputMessage = require("./app/types/InputMessage");
+import Answer = require("./app/types/Answer");
 import IAnswer = require("./app/interfaces/IAnswer");
 
 import StartAnswer = require("./app/classes/answers/StartAnswer");
 import UnknownAnswer = require("./app/classes/answers/UnknownAnswer");
+import InProgressAnswer = require("./app/classes/answers/InProgressAnswer");
 
 // Setup
 let app = express();
@@ -23,11 +25,6 @@ app.use(bodyParser.urlencoded({
 }));
 
 let previousAnswers = {};
-
-// Extend prototypes
-Date.prototype.toLocaleDateString = function() {
-    return this.getDate() + "/" + (this.getMonth() + 1) + "/" + this.getFullYear();
-};
 
 // Routers
 app.post("/", function(req: any, res: any) {
@@ -46,53 +43,63 @@ app.post("/:token", function(req: any, res: any) {
         normalizedText = Utils.normalizeText(im.message.text);
         prevAnswer = previousAnswers[im.message.chat.id];
 
-        // Search for appropriate route (answer)
-        if (prevAnswer && normalizedText !== Consts.welcomeMessage) {
-            for (i = 0; i < prevAnswer.forwardRoutes.length; i++) {
-                // Skip wildcard rule while comparing (wildcard processed only if there is no appropriate answer
-                if (prevAnswer.forwardRoutes[i].text !== "*" && prevAnswer.forwardRoutes[i].text === normalizedText) {
-                    wasMessageAccepted = true;
-                    answer = prevAnswer.forwardRoutes[i].answer;
-                    answer.inputMessage = im;
-                }
-            }
-            if (!wasMessageAccepted) {
-                // Now check wildcard if exists
+        // Stop processing query if previous is still performing
+        if (prevAnswer && prevAnswer.isInProgress) {
+            answer = new InProgressAnswer(im);
+        } else {
+
+            // Search for appropriate route (answer)
+            if (prevAnswer && normalizedText !== Consts.welcomeMessage) {
                 for (i = 0; i < prevAnswer.forwardRoutes.length; i++) {
-                    if (prevAnswer.forwardRoutes[i].text === "*") {
+                    // Skip wildcard rule while comparing (wildcard processed only if there is no appropriate answer
+                    if (prevAnswer.forwardRoutes[i].text !== "*" && prevAnswer.forwardRoutes[i].text === normalizedText) {
                         wasMessageAccepted = true;
                         answer = prevAnswer.forwardRoutes[i].answer;
                         answer.inputMessage = im;
                     }
                 }
-            }
-            // If there is not acceptable answer then show an error
-            if (!wasMessageAccepted) {
-                answer = new UnknownAnswer(im);
-            }
-        } else {
-            answer = new StartAnswer(im);
-            // Reset all routes after start
-            previousAnswers[im.message.chat.id] = undefined;
-        }
-
-        if (answer.isInputCorrect()) {
-            answer.prevAnswer = previousAnswers[im.message.chat.id];
-
-            if (answer.isLastInChain()) {
-                previousAnswers[im.message.chat.id] = undefined;
+                if (!wasMessageAccepted) {
+                    // Now check wildcard if exists
+                    for (i = 0; i < prevAnswer.forwardRoutes.length; i++) {
+                        if (prevAnswer.forwardRoutes[i].text === "*") {
+                            wasMessageAccepted = true;
+                            answer = prevAnswer.forwardRoutes[i].answer;
+                            answer.inputMessage = im;
+                        }
+                    }
+                }
+                // If there is not acceptable answer then show an error
+                if (!wasMessageAccepted) {
+                    answer = new UnknownAnswer(im);
+                }
             } else {
+                answer = new StartAnswer(im);
+                // Reset all routes after start
+                previousAnswers[im.message.chat.id] = undefined;
+            }
+
+            // Extend the chain by the correct answer
+            if (answer.isInputCorrect()) {
+                answer.prevAnswer = previousAnswers[im.message.chat.id];
                 previousAnswers[im.message.chat.id] = answer;
             }
         }
 
         res.set("Content-Type", "application/json");
-        res.send(answer.getAnswer());
+        answer.isInProgress = true;
+        answer.getAnswer((ans: Answer) => {
+            res.send(ans);
+            // Clear history if the answer is last in chain
+            if (answer.isInputCorrect() && answer.isLastInChain()) {
+                previousAnswers[im.message.chat.id] = undefined;
+            }
+            answer.isInProgress = false;
+        });
     } else {
         res.sendStatus(500);
     }
 });
 
 app.listen(30001, function() {
-    console.log("Example app listening on port 30001!");
+    console.log("Australian Services bot started on port 30001!");
 });

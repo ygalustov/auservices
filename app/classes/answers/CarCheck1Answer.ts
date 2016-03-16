@@ -5,7 +5,7 @@
 
 import BasicAnswer = require("./BasicAnswer");
 import CarCheck2Answer = require("./CarCheck2Answer");
-import Answer = require("../../types/Answer");
+import AnswerCallback = require("../../types/AnswerCallback");
 
 class CarCheck1Answer extends BasicAnswer {
 
@@ -15,17 +15,18 @@ class CarCheck1Answer extends BasicAnswer {
         // Set forward routes
         this.forwardRoutes.push({
             answer: new CarCheck2Answer(),
-            text: "*"
+            text: "nsw"
         });
     }
 
-    getAnswer(): Answer {
-        this.text = "Enter your car plates or hit /Start to return to the Main menu.";
+    public getAnswer(cb: AnswerCallback) {
+        this.text = "Select you State or hit /Start to return to the Main menu.";
         this.replyMarkup = {
-            hide_keyboard: true
+            keyboard: [["NSW"]],
+            resize_keyboard: true
         };
 
-        return super.getAnswer();
+        super.getAnswer(cb);
     }
 }
 

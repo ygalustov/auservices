@@ -3,7 +3,7 @@
  * See LICENSE in the project root for license information.
  */
 
-import Answer = require("../types/Answer");
+import AnswerCallback = require("../types/AnswerCallback");
 import ForwardRoute = require("../types/ForwardRoute");
 import InputMessage = require("../types/InputMessage");
 
@@ -12,10 +12,12 @@ interface IAnswer {
     inputMessage: InputMessage;
     prevAnswer: IAnswer;
     text: string;
+    isInProgress: boolean;
 
     isInputCorrect(): boolean;
     isLastInChain(): boolean;
-    getAnswer(): Answer;
+
+    getAnswer(cb: AnswerCallback);
 }
 
 export = IAnswer;

@@ -5,9 +5,9 @@
 
 import IAnswer = require("../../interfaces/IAnswer");
 import InputMessage = require("../../types/InputMessage");
-import Answer = require("../../types/Answer");
 import ReplyMarkup = require("../../types/ReplyMarkup");
 import ForwardRoute = require("../../types/ForwardRoute");
+import AnswerCallback = require("../../types/AnswerCallback");
 
 class BasicAnswer implements IAnswer {
     private _text: string;
@@ -16,16 +16,14 @@ class BasicAnswer implements IAnswer {
     private _forwardRoutes: Array<ForwardRoute>;
     private _prevAnswer: IAnswer;
     private _replyMarkup: ReplyMarkup;
+    private _isInProgress: boolean;
 
     constructor() {
         this._forwardRoutes = [];
+        this._isInProgress = false;
     }
 
-    isLastInChain(): boolean {
-        return false;
-    }
-
-    getAnswer(): Answer {
+    public getAnswer(cb: AnswerCallback) {
         if (this.isLastInChain() && this.isInputCorrect()) {
             this.replyMarkup = {
                 keyboard: [["/Start"]],
@@ -33,17 +31,29 @@ class BasicAnswer implements IAnswer {
             };
         }
 
-        return {
+        cb({
             chat_id: this.inputMessage.message.chat.id,
             method: "sendMessage",
             parse_mode: "Markdown",
             reply_markup: this.replyMarkup,
             text: this.text
-        };
+        });
+    };
+
+    isLastInChain(): boolean {
+        return false;
     }
 
     isInputCorrect(): boolean {
         return (this.inputMessage && this.inputMessage.message.text.length > 0);
+    }
+
+    get isInProgress(): boolean {
+        return this._isInProgress;
+    }
+
+    set isInProgress(isInProgress: boolean) {
+        this._isInProgress = isInProgress;
     }
 
     get replyMarkup(): ReplyMarkup {

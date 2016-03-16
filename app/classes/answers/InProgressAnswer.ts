@@ -7,21 +7,21 @@ import InputMessage = require("../../types/InputMessage");
 import BasicAnswer = require("./BasicAnswer");
 import AnswerCallback = require("../../types/AnswerCallback");
 
-class UnknownAnswer extends BasicAnswer {
+class InProgressAnswer extends BasicAnswer {
     constructor(inputMessage: InputMessage) {
         super();
         this.inputMessage = inputMessage;
     }
 
     isLastInChain(): boolean {
-        return true;
+        return false;
     }
 
     getAnswer(cb: AnswerCallback) {
-        this.text = "Unfortunately I cannot understand you.\nType /Start to open menu.";
+        this.text = "The operation still in progress, please wait...";
 
         super.getAnswer(cb);
     }
 }
 
-export = UnknownAnswer;
+export = InProgressAnswer;

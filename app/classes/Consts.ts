@@ -6,7 +6,7 @@
  */
 
 class Consts {
-    public static greetingsKey: string = "";
+    public static greetingsKey: string = ""; // Will be populated from config file
     public static rootText: string = "AU personal assistant.";
     public static welcomeMessage = "start";
 }
