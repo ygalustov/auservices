@@ -7,13 +7,12 @@
     "body-parser": "^1.14.2",
     "cheerio": "^0.20.0",
     "express": "^4.13.3",
-    "querystring": "^0.2.0",
     "request": "^2.69.0"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "tsd install"
+    "postinstall": "tsd install",
+    "test": "jasmine"
   },
   "keywords": [
     "Australian Services",

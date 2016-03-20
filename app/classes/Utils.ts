@@ -14,15 +14,13 @@ class Utils {
             let config = fs.readFileSync("botconfig.json", "utf8"),
                 json = JSON.parse(config);
 
-            Consts.greetingsKey = json.SecurityToken;
+            Consts.greetingsKey = json.securityToken;
         }
 
         return (token === Consts.greetingsKey);
     }
 
     public static format(format: string, ...args: any[]): string {
-//        let args: any[] = Array.prototype.slice.call(arguments, 1);
-
         return format.replace(/{(\d+)}/g, function(match, number) {
             return typeof args[number] !== "undefined" ? args[number] : match;
         });

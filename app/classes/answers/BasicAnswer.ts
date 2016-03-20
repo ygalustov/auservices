@@ -9,6 +9,9 @@ import ReplyMarkup = require("../../types/ReplyMarkup");
 import ForwardRoute = require("../../types/ForwardRoute");
 import AnswerCallback = require("../../types/AnswerCallback");
 
+/**
+ * Basic class for all answers, shouldn't be used directly
+ */
 class BasicAnswer implements IAnswer {
     private _text: string;
     // Usually inputMessage is set during the routing process, so no assignment in the constructor
@@ -31,13 +34,23 @@ class BasicAnswer implements IAnswer {
             };
         }
 
-        cb({
-            chat_id: this.inputMessage.message.chat.id,
-            method: "sendMessage",
-            parse_mode: "Markdown",
-            reply_markup: this.replyMarkup,
-            text: this.text
-        });
+        if (this.inputMessage) {
+            cb({
+                chat_id: this.inputMessage.message.chat.id,
+                method: "sendMessage",
+                parse_mode: "Markdown",
+                reply_markup: this.replyMarkup,
+                text: this.text
+            });
+        } else {
+            cb({
+                chat_id: undefined,
+                method: undefined,
+                parse_mode: undefined,
+                reply_markup: undefined,
+                text: undefined
+            });
+        }
     };
 
     isLastInChain(): boolean {
@@ -45,7 +58,7 @@ class BasicAnswer implements IAnswer {
     }
 
     isInputCorrect(): boolean {
-        return (this.inputMessage && this.inputMessage.message.text.length > 0);
+        return (this.inputMessage && this.inputMessage.message && this.inputMessage.message.text && this.inputMessage.message.text.length > 0);
     }
 
     get isInProgress(): boolean {
