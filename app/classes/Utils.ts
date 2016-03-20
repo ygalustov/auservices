@@ -28,7 +28,7 @@ class Utils {
         });
     }
 
-    public static normalizeText(text) {
+    public static normalizeText(text: string) {
         return text ? text.replace(/[^a-z]+/ig, "").toLowerCase() : "";
     }
 }
