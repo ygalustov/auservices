@@ -5,7 +5,7 @@
  */
 
 import BasicAnswer = require("../../../app/classes/answers/basic-answer");
-import Answer = require("../../../app/types/Answer");
+import Answer = require("../../../app/types/answer");
 
 describe("BasicAnswer", () => {
     let ba: BasicAnswer;

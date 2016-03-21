@@ -3,7 +3,7 @@
  * See LICENSE in the project root for license information.
  */
 
-import Answer = require("./Answer");
+import Answer = require("./answer");
 
 interface AnswerCallback {
     (answer: Answer): void;
