@@ -32,11 +32,6 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
-.jshintrc
-.project
-.settings
-
-settings.json
-launch.json
+.vscode/*
 typings/*
 botconfig.json
