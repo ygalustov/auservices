@@ -37,7 +37,7 @@ describe("BasicAnswer", () => {
     });
 
     it("doesn't have any routes", () => {
-        expect(ba.forwardRoutes.length).toBe(0);
+        expect(ba.forwardRoutes).toBeUndefined();
     });
 
     it("doesn't have previous answer", () => {

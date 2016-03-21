@@ -5,28 +5,27 @@
 
 import BasicAnswer = require("./basic-answer");
 import CarCheck2Answer = require("./car-check2-answer");
-import AnswerCallback = require("../../types/answer-callback");
+import ForwardRoute = require("../../types/forward-route");
+import ReplyMarkup = require("../../types/reply-markup");
 
 class CarCheck1Answer extends BasicAnswer {
 
-    constructor() {
-        super();
-
-        // Set forward routes
-        this.forwardRoutes.push({
-            answer: new CarCheck2Answer(),
-            text: "nsw"
-        });
+    get text(): string {
+        return "Select you State or hit /Start to return to the Main menu.";
     }
 
-    public getAnswer(cb: AnswerCallback) {
-        this.text = "Select you State or hit /Start to return to the Main menu.";
-        this.replyMarkup = {
+    get forwardRoutes(): Array<ForwardRoute> {
+        return [{
+            answer: new CarCheck2Answer(),
+            text: "nsw"
+        }];
+    }
+
+    get replyMarkup(): ReplyMarkup {
+        return {
             keyboard: [["NSW"]],
             resize_keyboard: true
         };
-
-        super.getAnswer(cb);
     }
 }
 

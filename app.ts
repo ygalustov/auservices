@@ -45,7 +45,8 @@ app.post("/:token", function(req: any, res: any) {
 
         // Stop processing query if previous is still performing
         if (prevAnswer && prevAnswer.isInProgress) {
-            answer = new InProgressAnswer(im);
+            answer = new InProgressAnswer();
+            answer.inputMessage = im;
         } else {
 
             // Search for appropriate route (answer)
@@ -70,10 +71,12 @@ app.post("/:token", function(req: any, res: any) {
                 }
                 // If there is not acceptable answer then show an error
                 if (!wasMessageAccepted) {
-                    answer = new UnknownAnswer(im);
+                    answer = new UnknownAnswer();
+                    answer.inputMessage = im;
                 }
             } else {
-                answer = new StartAnswer(im);
+                answer = new StartAnswer();
+                answer.inputMessage = im;
                 // Reset all routes after start
                 previousAnswers[im.message.chat.id] = undefined;
             }

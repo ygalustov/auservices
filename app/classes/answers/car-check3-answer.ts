@@ -8,8 +8,11 @@ import BasicAnswer = require("./basic-answer");
 import Utils = require("../utils");
 import RegoCheck = require("../../../scrapers/rego/rego-check");
 import Scrapable = require("../../../scrapers/scrapable");
+import ReplyMarkup = require("../../types/reply-markup");
 
 class CarCheck3Answer extends BasicAnswer {
+    private _text: string;
+
     isLastInChain(): boolean {
         return true;
     }
@@ -27,21 +30,36 @@ class CarCheck3Answer extends BasicAnswer {
             rego = new RegoCheck();
             rego.getResponse(plates, (details: any, error: string) => {
                 if (!error) {
-                    this.text = Utils.format("{0}\n{1}\n{2}\n{3}", details.details, details.rego, details.ctp, details.insurer);
+                    this._text = Utils.format("{0}\n{1}\n{2}\n{3}", details.details, details.rego, details.ctp, details.insurer);
                 } else {
-                    this.text = error;
+                    this._text = error;
                 }
                 super.getAnswer(cb);
             });
         } else {
-            this.text = Utils.format("Wrong plate format: {0}. Please try again.", plates);
-
-            this.replyMarkup = {
-                hide_keyboard: true
-            };
+            this._text = Utils.format("Wrong plate format: {0}. Please try again.", plates);
             super.getAnswer(cb);
         }
     }
+
+    get replyMarkup(): ReplyMarkup {
+        if (this.isInputCorrect()) {
+            return {
+                keyboard: [["/Start"]],
+                resize_keyboard: true
+            };
+        } else {
+            return {
+                hide_keyboard: true
+            };
+        }
+    }
+
+    get text(): string {
+        return this._text;
+    }
+
+
 }
 
 export = CarCheck3Answer;

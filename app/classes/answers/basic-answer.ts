@@ -13,27 +13,16 @@ import AnswerCallback = require("../../types/answer-callback");
  * Basic class for all answers, shouldn't be used directly
  */
 class BasicAnswer implements Answerable {
-    private _text: string;
     // Usually inputMessage is set during the routing process, so no assignment in the constructor
     private _inputMessage: InputMessage;
-    private _forwardRoutes: Array<ForwardRoute>;
     private _prevAnswer: Answerable;
-    private _replyMarkup: ReplyMarkup;
     private _isInProgress: boolean;
 
     constructor() {
-        this._forwardRoutes = [];
         this._isInProgress = false;
     }
 
     public getAnswer(cb: AnswerCallback) {
-        if (this.isLastInChain() && this.isInputCorrect()) {
-            this.replyMarkup = {
-                keyboard: [["/Start"]],
-                resize_keyboard: true
-            };
-        }
-
         if (this.inputMessage) {
             cb({
                 chat_id: this.inputMessage.message.chat.id,
@@ -70,19 +59,18 @@ class BasicAnswer implements Answerable {
     }
 
     get replyMarkup(): ReplyMarkup {
-        return this._replyMarkup;
-    }
-
-    set replyMarkup(replyMarkup: ReplyMarkup) {
-        this._replyMarkup = replyMarkup;
+        if (this.isLastInChain() && this.isInputCorrect()) {
+            return {
+                keyboard: [["/Start"]],
+                resize_keyboard: true
+            };
+        } else {
+            return undefined;
+        }
     }
 
     get text(): string {
-        return this._text;
-    }
-
-    set text(text: string) {
-        this._text = text;
+        return undefined;
     }
 
     get inputMessage(): InputMessage {
@@ -94,11 +82,7 @@ class BasicAnswer implements Answerable {
     }
 
     get forwardRoutes(): Array<ForwardRoute> {
-        return this._forwardRoutes;
-    }
-
-    set forwardRoutes(forwardRoutes: Array<ForwardRoute>) {
-        this._forwardRoutes = forwardRoutes;
+        return undefined;
     }
 
     get prevAnswer(): Answerable {

@@ -71,11 +71,11 @@ class RegoCheck implements Scrapable {
                                             .trim();
 
                                         cb({
-                                            ctp: ctp,
-                                            details: details,
-                                            insurer: insurer,
-                                            plates: plates,
-                                            rego: rego
+                                            ctp: ctp.trim(),
+                                            details: details.trim(),
+                                            insurer: insurer.trim(),
+                                            plates: plates.trim(),
+                                            rego: rego.trim()
                                         }, null);
                                     } else {
                                         cb(null, "No such plates found.");
@@ -93,8 +93,6 @@ class RegoCheck implements Scrapable {
                 cb(null, "Internal error(1): " + error1);
             }
         });
-
-        return "all is ok";
     }
 }
 

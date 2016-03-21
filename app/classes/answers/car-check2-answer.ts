@@ -5,27 +5,26 @@
 
 import BasicAnswer = require("./basic-answer");
 import CarCheck3Answer = require("./car-check3-answer");
-import AnswerCallback = require("../../types/answer-callback");
+import ReplyMarkup = require("../../types/reply-markup");
+import ForwardRoute = require("../../types/forward-route");
 
 class CarCheck2Answer extends BasicAnswer {
 
-    constructor() {
-        super();
-
-        // Set forward routes
-        this.forwardRoutes.push({
-            answer: new CarCheck3Answer(),
-            text: "*"
-        });
-    }
-
-    public getAnswer(cb: AnswerCallback) {
-        this.text = "Enter your car plates or hit /Start to return to the Main menu.";
-        this.replyMarkup = {
+    get replyMarkup(): ReplyMarkup {
+        return {
             hide_keyboard: true
         };
+    }
 
-        super.getAnswer(cb);
+    get forwardRoutes(): Array<ForwardRoute> {
+        return [{
+            answer: new CarCheck3Answer(),
+            text: "*"
+        }];
+    }
+
+    get text(): string {
+        return "Enter your car plates or hit /Start to return to the Main menu.";
     }
 }
 
