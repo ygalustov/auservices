@@ -3,21 +3,21 @@
  * See LICENSE in the project root for license information.
  */
 
-import IAnswer = require("../../interfaces/IAnswer");
-import InputMessage = require("../../types/InputMessage");
-import ReplyMarkup = require("../../types/ReplyMarkup");
-import ForwardRoute = require("../../types/ForwardRoute");
-import AnswerCallback = require("../../types/AnswerCallback");
+import Answerable = require("../../interfaces/answerable");
+import InputMessage = require("../../types/input-message");
+import ReplyMarkup = require("../../types/reply-markup");
+import ForwardRoute = require("../../types/forward-route");
+import AnswerCallback = require("../../types/answer-callback");
 
 /**
  * Basic class for all answers, shouldn't be used directly
  */
-class BasicAnswer implements IAnswer {
+class BasicAnswer implements Answerable {
     private _text: string;
     // Usually inputMessage is set during the routing process, so no assignment in the constructor
     private _inputMessage: InputMessage;
     private _forwardRoutes: Array<ForwardRoute>;
-    private _prevAnswer: IAnswer;
+    private _prevAnswer: Answerable;
     private _replyMarkup: ReplyMarkup;
     private _isInProgress: boolean;
 
@@ -101,11 +101,11 @@ class BasicAnswer implements IAnswer {
         this._forwardRoutes = forwardRoutes;
     }
 
-    get prevAnswer(): IAnswer {
+    get prevAnswer(): Answerable {
         return this._prevAnswer;
     }
 
-    set prevAnswer(answer: IAnswer) {
+    set prevAnswer(answer: Answerable) {
         this._prevAnswer = answer;
     }
 }

@@ -5,7 +5,7 @@
  * Useful routine functions located here
  */
 
-import Consts = require("./Consts");
+import Consts = require("./consts");
 import fs = require("fs");
 
 class Utils {

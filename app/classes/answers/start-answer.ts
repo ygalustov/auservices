@@ -3,11 +3,11 @@
  * See LICENSE in the project root for license information.
  */
 
-import InputMessage = require("../../types/InputMessage");
-import AnswerCallback = require("../../types/AnswerCallback");
-import BasicAnswer = require("./BasicAnswer");
-import Utils = require("../Utils");
-import CarCheck1Answer = require("./CarCheck1Answer");
+import InputMessage = require("../../types/input-message");
+import AnswerCallback = require("../../types/answer-callback");
+import BasicAnswer = require("./basic-answer");
+import Utils = require("../utils");
+import CarCheck1Answer = require("./car-check1-answer");
 
 class StartAnswer extends BasicAnswer {
 

@@ -4,7 +4,7 @@
  *
  */
 
-import BasicAnswer = require("../../../app/classes/answers/BasicAnswer");
+import BasicAnswer = require("../../../app/classes/answers/basic-answer");
 import Answer = require("../../../app/types/Answer");
 
 describe("BasicAnswer", () => {

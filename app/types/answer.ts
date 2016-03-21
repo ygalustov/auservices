@@ -3,7 +3,7 @@
  * See LICENSE in the project root for license information.
  */
 
-import ReplyMarkup = require("./ReplyMarkup");
+import ReplyMarkup = require("./reply-markup");
 
 interface Answer {
     method: string;

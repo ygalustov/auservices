@@ -4,11 +4,11 @@
  *
  */
 
-import Utils = require("../../app/classes/Utils");
+import Utils = require("../../app/classes/utils");
 import fs = require("fs");
 
 describe("Utils", () => {
-    it("should remove all non alpha characters from token and the text to lowecase", () => {
+    it("should remove all non-alpha characters from token and the text to lowecase", () => {
         expect(Utils.normalizeText("A123B-z;';[]()")).toMatch("[a-z]");
     });
 

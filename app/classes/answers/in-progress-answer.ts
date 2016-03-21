@@ -3,9 +3,9 @@
  * See LICENSE in the project root for license information.
  */
 
-import InputMessage = require("../../types/InputMessage");
-import BasicAnswer = require("./BasicAnswer");
-import AnswerCallback = require("../../types/AnswerCallback");
+import InputMessage = require("../../types/input-message");
+import BasicAnswer = require("./basic-answer");
+import AnswerCallback = require("../../types/answer-callback");
 
 class InProgressAnswer extends BasicAnswer {
     constructor(inputMessage: InputMessage) {

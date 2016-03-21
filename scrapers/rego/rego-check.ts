@@ -3,13 +3,13 @@
  * See LICENSE in the project root for license information.
  */
 
-import IScraper = require("../IScraper");
-import ScraperCallback = require("../ScraperCallback");
+import Scrapable = require("../scrapable");
+import ScraperCallback = require("../scraper-callback");
 import request = require("request");
 import cheerio = require("cheerio");
 import http = require("http");
 
-class RegoCheck implements IScraper {
+class RegoCheck implements Scrapable {
     getResponse(requestData: string, cb: ScraperCallback) {
         let url1 = "https://www.service.nsw.gov.au/transaction/check-registration-and-history-vehicle",
             plates = requestData;

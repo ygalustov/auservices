@@ -3,9 +3,9 @@
  * See LICENSE in the project root for license information.
  */
 
-import BasicAnswer = require("./BasicAnswer");
-import CarCheck3Answer = require("./CarCheck3Answer");
-import AnswerCallback = require("../../types/AnswerCallback");
+import BasicAnswer = require("./basic-answer");
+import CarCheck3Answer = require("./car-check3-answer");
+import AnswerCallback = require("../../types/answer-callback");
 
 class CarCheck2Answer extends BasicAnswer {
 

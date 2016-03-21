@@ -6,16 +6,16 @@
 import express = require("express");
 import bodyParser = require("body-parser");
 
-import Consts = require("./app/classes/Consts");
-import Utils = require("./app/classes/Utils");
+import Consts = require("./app/classes/consts");
+import Utils = require("./app/classes/utils");
 
-import InputMessage = require("./app/types/InputMessage");
-import Answer = require("./app/types/Answer");
-import IAnswer = require("./app/interfaces/IAnswer");
+import InputMessage = require("./app/types/input-message");
+import Answer = require("./app/types/answer");
+import Answerable = require("./app/interfaces/answerable");
 
-import StartAnswer = require("./app/classes/answers/StartAnswer");
-import UnknownAnswer = require("./app/classes/answers/UnknownAnswer");
-import InProgressAnswer = require("./app/classes/answers/InProgressAnswer");
+import StartAnswer = require("./app/classes/answers/start-answer");
+import UnknownAnswer = require("./app/classes/answers/unknown-answer");
+import InProgressAnswer = require("./app/classes/answers/in-progress-answer");
 
 // Setup
 let app = express();
@@ -33,9 +33,9 @@ app.post("/", function(req: any, res: any) {
 
 app.post("/:token", function(req: any, res: any) {
     let im: InputMessage = req.body,
-        answer: IAnswer,
+        answer: Answerable,
         normalizedText: string,
-        prevAnswer: IAnswer,
+        prevAnswer: Answerable,
         wasMessageAccepted = false,
         i: number;
 

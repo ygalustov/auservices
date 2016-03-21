@@ -3,10 +3,10 @@
  * See LICENSE in the project root for license information.
  */
 
-import IAnswer = require("../interfaces/IAnswer");
+import Answerable = require("../interfaces/answerable");
 
 interface ForwardRoute {
-    answer: IAnswer;
+    answer: Answerable;
     text: string;
 }
 

@@ -3,14 +3,14 @@
  * See LICENSE in the project root for license information.
  */
 
-import AnswerCallback = require("../types/AnswerCallback");
-import ForwardRoute = require("../types/ForwardRoute");
-import InputMessage = require("../types/InputMessage");
+import AnswerCallback = require("../types/answer-callback");
+import ForwardRoute = require("../types/forward-route");
+import InputMessage = require("../types/input-message");
 
-interface IAnswer {
+interface Answerable {
     forwardRoutes: Array<ForwardRoute>;
     inputMessage: InputMessage;
-    prevAnswer: IAnswer;
+    prevAnswer: Answerable;
     text: string;
     isInProgress: boolean;
 
@@ -20,4 +20,4 @@ interface IAnswer {
     getAnswer(cb: AnswerCallback);
 }
 
-export = IAnswer;
+export = Answerable;

@@ -3,10 +3,10 @@
  * See LICENSE in the project root for license information.
  */
 
-import ScraperCallback = require("./ScraperCallback");
+import ScraperCallback = require("./scraper-callback");
 
-interface IScraper {
+interface Scrapable {
     getResponse(request: string, cb: ScraperCallback): string;
 }
 
-export = IScraper;
+export = Scrapable;

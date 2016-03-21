@@ -3,11 +3,11 @@
  * See LICENSE in the project root for license information.
  */
 
-import AnswerCallback = require("../../types/AnswerCallback");
-import BasicAnswer = require("./BasicAnswer");
-import Utils = require("../Utils");
-import RegoCheck = require("../../../scrapers/rego/RegoCheck");
-import IScraper = require("../../../scrapers/IScraper");
+import AnswerCallback = require("../../types/answer-callback");
+import BasicAnswer = require("./basic-answer");
+import Utils = require("../utils");
+import RegoCheck = require("../../../scrapers/rego/rego-check");
+import Scrapable = require("../../../scrapers/scrapable");
 
 class CarCheck3Answer extends BasicAnswer {
     isLastInChain(): boolean {
@@ -21,7 +21,7 @@ class CarCheck3Answer extends BasicAnswer {
 
     getAnswer(cb: AnswerCallback) {
         let plates: string = this.inputMessage.message.text,
-            rego: IScraper;
+            rego: Scrapable;
 
         if (this.isInputCorrect()) {
             rego = new RegoCheck();
