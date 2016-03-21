@@ -30,6 +30,6 @@ All local dependencies (including TSD definitions) will be installed by the foll
 
     npm install
     
-## Run test
+## Run tests
     
     npm test    
