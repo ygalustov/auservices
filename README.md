@@ -15,8 +15,8 @@ If you don't have Telegram application go to https://telegram.org/ and download 
 
 ## Global dependencies
 
-It uses Jasmin2 to run tests and TSD for typeDefinitions delivery.
-In addition tslint is used to check source quality.
+It uses Jasmin2 to run tests and TSD for TypeDefinitions delivery.
+In addition, TSLint used to check source code quality.
 
 So before working install the following:
 
