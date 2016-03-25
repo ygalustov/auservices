@@ -19,7 +19,7 @@ describe("RegoCheck", () => {
             expect(details.details).toBe("1989 RED MERCEDES BENZ UNKNOWN SEDAN , VIN/Chassis: ********0359");
             expect(details.insurer).toBe("Insurer's name: GIO");
             expect(details.plates).toBe("123");
-            expect(details.rego).toBe("The registration expires on 22/03/2016.");
+            expect(details.rego).toBe("The registration expired on 22/03/2016.");
 
             done();
         });

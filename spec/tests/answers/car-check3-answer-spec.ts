@@ -79,7 +79,7 @@ describe("CarCheck3Answer", () => {
                     resize_keyboard: true
                 },
                 text: "1989 RED MERCEDES BENZ UNKNOWN SEDAN , VIN/Chassis: ********0359\n" +
-                "The registration expires on 22/03/2016.\nThe CTP policy period end date is 22/03/2016.\nInsurer's name: GIO"
+                "The registration expired on 22/03/2016.\nThe CTP policy period end date is 22/03/2016.\nInsurer's name: GIO"
             });
 
             done();
