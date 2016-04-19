@@ -5,27 +5,28 @@
 import {Session} from "./botbuilder/Node/src/Session";
 import {IDialogResult} from "./botbuilder/Node/src/dialogs/Dialog";
 import {BotConnectorBot} from "./botbuilder/Node/src/bots/BotConnectorBot";
-// import {TextBot} from "./botbuilder/Node/src/bots/TextBot"; // Uncomment TextBot related lines to test in local console 
 import {CommandDialog} from "./botbuilder/Node/src/dialogs/CommandDialog";
 import {Prompts} from "./botbuilder/Node/src/dialogs/Prompts";
 import {ResumeReason} from "./botbuilder/Node/src/dialogs/Dialog";
+import {MemoryStorage} from "./botbuilder/Node/src/storage/Storage";
 
 import RegoCheck = require("./scrapers/rego/rego-check");
 import Utils = require("./app/classes/utils");
 
 let restify = require("restify");
+let auServicesBot: BotConnectorBot = new BotConnectorBot({
+    minSendDelay: 0
+});
+let localStorage: MemoryStorage = new MemoryStorage;
 
-let AuServicesBot: BotConnectorBot = new BotConnectorBot();
-// let AuServicesBot = new TextBot();
-
-AuServicesBot.add("/", new CommandDialog()
+auServicesBot.add("/", new CommandDialog()
     .onDefault(function (session) {
         session.beginDialog("/start");
     })
 );
 
 
-AuServicesBot.add("/start", [
+auServicesBot.add("/start", [
     function (session: Session) {
         Prompts.choice(session,
             "Hello, I'm your personal assistant. Please choose what you would like to get.",
@@ -43,7 +44,7 @@ AuServicesBot.add("/start", [
     }
 ]);
 
-AuServicesBot.add("/carcheck", [
+auServicesBot.add("/carcheck", [
     function (session: Session, results: IDialogResult<any>) {
         Prompts.choice(session,
             "Select your State or hit /Start to return to the Main menu.",
@@ -63,29 +64,29 @@ AuServicesBot.add("/carcheck", [
         Prompts.text(session, "Enter your car plates or hit /Start to return to the Main menu.");
     },
     function (session: Session, results: IDialogResult<any>, next: (results?: IDialogResult<any>) => void) {
-        let rego: RegoCheck = new RegoCheck();
-        console.log("2");
-        session.dialogData.plates = results.response;
-        session.dialogData.inProgress = true;
-        rego.getResponse(session.dialogData.plates, (details: any, error: string) => {
-            session.dialogData.inProgress = false;
-            session.dialogData.details = details;
-            next();
+        let rego: RegoCheck = new RegoCheck(),
+            valueId = "inProgress" + session.message.channelConversationId;
+
+        localStorage.get(valueId, (err, data) => {
+            // Prevent parallel requests 
+            if (data && data.inProgress === true) {
+                session.send("The operation is in progress, please wait...");
+            } else {
+                session.dialogData.plates = results.response;
+
+                localStorage.save(valueId, { inProgress: true });
+                rego.getResponse(session.dialogData.plates, (details: any, error: string) => {
+                    localStorage.save(valueId, { inProgress: false });
+                    session.dialogData.details = details;
+                    next();
+                });
+            }
         });
     },
     function (session: Session, results: IDialogResult<any>) {
-        console.log(session.dialogData);
-        console.log("2");
-
-        if (session.dialogData.inProgress) {
-            session.send("The operation is in progress, please wait...");
-        } else {
-            session.endDialog("%s\n%s\n%s\n%s", session.dialogData.details.details, session.dialogData.details.rego, session.dialogData.details.ctp, session.dialogData.details.insurer);
-        }
+        session.endDialog("%s\n%s\n%s\n%s", session.dialogData.details.details, session.dialogData.details.rego, session.dialogData.details.ctp, session.dialogData.details.insurer);
     },
 ]);
-
-// AuServicesBot.listenStdin();
 
 let server = restify.createServer({
     certificate: null,     // If you want to create an HTTPS server, pass in the PEM-encoded certificate and key
@@ -102,9 +103,9 @@ let server = restify.createServer({
     handleUpgrades: false  // Hook the upgrade event from the node HTTP server, pushing Connection: Upgrade requests through the regular request handling chain; defaults to false
 });
 
-server.use(AuServicesBot.verifyBotFramework(Utils.getBotCredentials()));
+server.use(auServicesBot.verifyBotFramework(Utils.getBotCredentials()));
 
-server.post("/v1/messages", AuServicesBot.listen());
+server.post("/v1/messages", auServicesBot.listen());
 
 server.listen(30001, function () {
     console.log("%s listening to %s", server.name, server.url);
