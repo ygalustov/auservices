@@ -1,35 +1,32 @@
-# Collection of web services for Telegram messenger
+# Collection of web services for Messengers
 
-This set gets public information from various australian websites and convert it into TelegramBotApi format.
+This set gets public information from various australian websites and convert it into Microsoft Bot Framework format, which transmit data to one of the messengers.
+Currently supported Telegram and Slack.
 
 ## The current list of services
 
-1. Car registration checking for NSW state.
+1. Car registration checking for NSW State in Australia.
 
 ## Testing services
-To test run Telegram application and start conversation with *AustralianServicesBot*.
+
+To test run Telegram or Slack and start conversation with *AustralianServicesBot*.
 
 If you don't have Telegram application go to https://telegram.org/ and download it for free.
+
+To get Slack go to https://slack.com/
 
 # Installation
 
 ## Global dependencies
 
-It uses Jasmin2 to run tests and TSD for TypeDefinitions delivery.
-In addition, TSLint used to check source code quality.
+It uses ```Jasmin2``` to run tests and ```Typings``` for TypeDefinitions delivery.
+
+In addition, ```TSLint``` used to check source code quality.
 
 So before working install the following:
-
-    npm install tsd -g
-    npm install jasmin -g
-    npm install tslint -g
-
-## Local dependencies
-
-All local dependencies (including TSD definitions) will be installed by the following command
 
     npm install
     
 ## Run tests
     
-    npm test    
+    npm test
