@@ -1,0 +1,3 @@
+[submodule "botbuilder"]
+	path = botbuilder
+	url = https://github.com/ygalustov/BotBuilder.git
