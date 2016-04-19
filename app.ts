@@ -92,7 +92,7 @@ let server = restify.createServer({
     key: null,             // If you want to create an HTTPS server, pass in the PEM-encoded certificate and key
     formatters: null,      //  Custom response formatters for res.send()
     log: {
-        trace: function (text, type) {
+        trace: function () {
             // Put empty implementation here to prevent debugger from corrupting. If leave 'log' as null then debugger will never step next to this line
         }
     },                     // You can optionally pass in a bunyan instance; not required
