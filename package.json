@@ -19,8 +19,8 @@
     "typings": "^0.7.11"
   },
   "scripts": {
-    "postinstall": "tsd install",
-    "test": "jasmine"
+    "postinstall": "node_modules/.bin/typings install",
+    "test": "node_modules/.bin/jasmine"
   },
   "keywords": [
     "Australian Services",
