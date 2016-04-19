@@ -1,0 +1,12 @@
+{
+  "name": "auservices",
+  "version": false,
+  "dependencies": {},
+  "ambientDependencies": {
+    "bunyan": "registry:dt/bunyan#0.0.0+20160412155112",
+    "cheerio": "registry:dt/cheerio",
+    "jasmine": "registry:dt/jasmine",
+    "restify": "registry:dt/restify#2.0.0+20160316155526",
+    "sprintf-js": "registry:dt/sprintf-js#0.0.0+20160317120654"
+  }
+}

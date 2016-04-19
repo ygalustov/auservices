@@ -5,11 +5,19 @@
   "main": "app.js",
   "dependencies": {
     "body-parser": "^1.14.2",
+    "bunyan": "^1.8.0",
     "cheerio": "^0.20.0",
-    "express": "^4.13.3",
-    "request": "^2.69.0"
+    "chrono-node": "^1.2.1",
+    "request": "^2.69.0",
+    "restify": "^4.0.4",
+    "sprintf-js": "^1.0.3",
+    "typescript": "^1.8.9"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jasmine": "^2.4.1",
+    "tslint": "^3.6.0",
+    "typings": "^0.7.11"
+  },
   "scripts": {
     "postinstall": "tsd install",
     "test": "jasmine"
@@ -20,14 +28,14 @@
     "Bot",
     "API"
   ],
-  "author": "Yury Galustov <yuryg@timetarget.com>",
+  "author": "Yury Galustov <ygalustov@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ygalustov/au-services.git"
+    "url": "git+https://github.com/ygalustov/auservices.git"
   },
   "bugs": {
-    "url": "https://github.com/ygalustov/au-services/issues"
+    "url": "https://github.com/ygalustov/auservices/issues"
   },
-  "homepage": "https://github.com/ygalustov/au-services#readme"
+  "homepage": "https://github.com/ygalustov/auservices#readme"
 }

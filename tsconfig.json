@@ -3,13 +3,16 @@
         "module": "commonjs",
         "target": "es5",
         "noImplicitAny": false,
-        "outDir": "build",
+        "outDir": "built",
         "rootDir": ".",
         "watch": true,
         "removeComments": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "noEmitOnError": true
     },
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "typings/browser.d.ts",
+        "typings/browser"
     ]
 }

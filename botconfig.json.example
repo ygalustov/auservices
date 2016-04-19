@@ -1,3 +1,5 @@
 {
-    "securityToken": "<put your security token here>"
+    "appId": "<Put APP ID here>",
+    "appSecret": "Put App Secret key",
+    "userWelcomeMessage": "Hello, to start working type something."
 }

@@ -1,108 +1,112 @@
 /*
- * Copyright (c) Yury Galustov <ygalustov@gmail.com All rights reserved. Licensed under the MIT license.
+ * Copyright (c) Yury Galustov <ygalustov@gmail.com> All rights reserved. Licensed under the MIT license.
  * See LICENSE in the project root for license information.
  */
+import {Session} from "./botbuilder/Node/src/Session";
+import {IDialogResult} from "./botbuilder/Node/src/dialogs/Dialog";
+import {BotConnectorBot} from "./botbuilder/Node/src/bots/BotConnectorBot";
+// import {TextBot} from "./botbuilder/Node/src/bots/TextBot"; // Uncomment TextBot related lines to test in local console 
+import {CommandDialog} from "./botbuilder/Node/src/dialogs/CommandDialog";
+import {Prompts} from "./botbuilder/Node/src/dialogs/Prompts";
+import {ResumeReason} from "./botbuilder/Node/src/dialogs/Dialog";
 
-import express = require("express");
-import bodyParser = require("body-parser");
-
-import Consts = require("./app/classes/consts");
+import RegoCheck = require("./scrapers/rego/rego-check");
 import Utils = require("./app/classes/utils");
 
-import InputMessage = require("./app/types/input-message");
-import Answer = require("./app/types/answer");
-import Answerable = require("./app/interfaces/answerable");
+let restify = require("restify");
 
-import StartAnswer = require("./app/classes/answers/start-answer");
-import UnknownAnswer = require("./app/classes/answers/unknown-answer");
-import InProgressAnswer = require("./app/classes/answers/in-progress-answer");
+let AuServicesBot: BotConnectorBot = new BotConnectorBot();
+// let AuServicesBot = new TextBot();
 
-// Setup
-let app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+AuServicesBot.add("/", new CommandDialog()
+    .onDefault(function (session) {
+        session.beginDialog("/start");
+    })
+);
 
-let previousAnswers = {};
 
-// Routers
-app.post("/", function(req: any, res: any) {
-    res.send(Consts.rootText);
-});
-
-app.post("/:token", function(req: any, res: any) {
-    let im: InputMessage = req.body,
-        answer: Answerable,
-        normalizedText: string,
-        prevAnswer: Answerable,
-        wasMessageAccepted = false,
-        i: number;
-
-    if (Utils.isValidToken(req.params.token)) {
-        normalizedText = Utils.normalizeText(im.message.text);
-        prevAnswer = previousAnswers[im.message.chat.id];
-
-        // Stop processing query if previous is still performing
-        if (prevAnswer && prevAnswer.isInProgress) {
-            answer = new InProgressAnswer();
-            answer.inputMessage = im;
+AuServicesBot.add("/start", [
+    function (session: Session) {
+        Prompts.choice(session,
+            "Hello, I'm your personal assistant. Please choose what you would like to get.",
+            ["/carcheck 🚗"], {
+                maxRetries: 3,
+                retryPrompt: "To continue please select item from the list."
+            });
+    },
+    function (session: Session, results: IDialogResult<any>) {
+        if (results.resumed === ResumeReason.completed) {
+            session.beginDialog("/carcheck");
         } else {
+            session.reset("/");
+        }
+    }
+]);
 
-            // Search for appropriate route (answer)
-            if (prevAnswer && normalizedText !== Consts.welcomeMessage) {
-                for (i = 0; i < prevAnswer.forwardRoutes.length; i++) {
-                    // Skip wildcard rule while comparing (wildcard processed only if there is no appropriate answer
-                    if (prevAnswer.forwardRoutes[i].text !== "*" && prevAnswer.forwardRoutes[i].text === normalizedText) {
-                        wasMessageAccepted = true;
-                        answer = prevAnswer.forwardRoutes[i].answer;
-                        answer.inputMessage = im;
-                    }
-                }
-                if (!wasMessageAccepted) {
-                    // Now check wildcard if exists
-                    for (i = 0; i < prevAnswer.forwardRoutes.length; i++) {
-                        if (prevAnswer.forwardRoutes[i].text === "*") {
-                            wasMessageAccepted = true;
-                            answer = prevAnswer.forwardRoutes[i].answer;
-                            answer.inputMessage = im;
-                        }
-                    }
-                }
-                // If there is not acceptable answer then show an error
-                if (!wasMessageAccepted) {
-                    answer = new UnknownAnswer();
-                    answer.inputMessage = im;
-                }
-            } else {
-                answer = new StartAnswer();
-                answer.inputMessage = im;
-                // Reset all routes after start
-                previousAnswers[im.message.chat.id] = undefined;
-            }
+AuServicesBot.add("/carcheck", [
+    function (session: Session, results: IDialogResult<any>) {
+        Prompts.choice(session,
+            "Select your State or hit /Start to return to the Main menu.",
+            ["/NSW"], {
+                maxRetries: 3,
+                retryPrompt: "To continue please select item from the list."
+            });
 
-            // Extend the chain by the correct answer
-            if (answer.isInputCorrect()) {
-                answer.prevAnswer = previousAnswers[im.message.chat.id];
-                previousAnswers[im.message.chat.id] = answer;
-            }
+    },
+    function (session: Session, results: IDialogResult<any>) {
+        if (!results.response) {
+            session.reset("/");
+            return;
         }
 
-        res.set("Content-Type", "application/json");
-        answer.isInProgress = true;
-        answer.getAnswer((ans: Answer) => {
-            res.send(ans);
-            // Clear history if the answer is last in chain
-            if (answer.isInputCorrect() && answer.isLastInChain()) {
-                previousAnswers[im.message.chat.id] = undefined;
-            }
-            answer.isInProgress = false;
+        session.dialogData.state = results.response.index;
+        Prompts.text(session, "Enter your car plates or hit /Start to return to the Main menu.");
+    },
+    function (session: Session, results: IDialogResult<any>, next: (results?: IDialogResult<any>) => void) {
+        let rego: RegoCheck = new RegoCheck();
+        console.log("2");
+        session.dialogData.plates = results.response;
+        session.dialogData.inProgress = true;
+        rego.getResponse(session.dialogData.plates, (details: any, error: string) => {
+            session.dialogData.inProgress = false;
+            session.dialogData.details = details;
+            next();
         });
-    } else {
-        res.sendStatus(500);
-    }
+    },
+    function (session: Session, results: IDialogResult<any>) {
+        console.log(session.dialogData);
+        console.log("2");
+
+        if (session.dialogData.inProgress) {
+            session.send("The operation is in progress, please wait...");
+        } else {
+            session.endDialog("%s\n%s\n%s\n%s", session.dialogData.details.details, session.dialogData.details.rego, session.dialogData.details.ctp, session.dialogData.details.insurer);
+        }
+    },
+]);
+
+// AuServicesBot.listenStdin();
+
+let server = restify.createServer({
+    certificate: null,     // If you want to create an HTTPS server, pass in the PEM-encoded certificate and key
+    key: null,             // If you want to create an HTTPS server, pass in the PEM-encoded certificate and key
+    formatters: null,      //  Custom response formatters for res.send()
+    log: {
+        trace: function (text, type) {
+            // Put empty implementation here to prevent debugger from corrupting. If leave 'log' as null then debugger will never step next to this line
+        }
+    },                     // You can optionally pass in a bunyan instance; not required
+    name: "node-api",      // By default, this will be set in the Server response header, default is restify
+    spdy: null,            // Any options accepted by node-spdy
+    version: "1.1.3",      // A default version to set for all routes
+    handleUpgrades: false  // Hook the upgrade event from the node HTTP server, pushing Connection: Upgrade requests through the regular request handling chain; defaults to false
 });
 
-app.listen(30001, function() {
-    console.log("Australian Services bot started on port 30001!");
+server.use(AuServicesBot.verifyBotFramework(Utils.getBotCredentials()));
+
+server.post("/v1/messages", AuServicesBot.listen());
+
+server.listen(30001, function () {
+    console.log("%s listening to %s", server.name, server.url);
 });
+

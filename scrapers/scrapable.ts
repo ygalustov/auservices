@@ -6,7 +6,7 @@
 import ScraperCallback = require("./scraper-callback");
 
 interface Scrapable {
-    getResponse(request: string, cb: ScraperCallback);
+    getResponse(request: string, cb: ScraperCallback): void;
 }
 
 export = Scrapable;
